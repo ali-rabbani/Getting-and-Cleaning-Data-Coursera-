@@ -52,3 +52,6 @@ scores
 xpathSApply(doc,"//li[@class= 'nextGame']", xmlValue) ##same
 
 
+fileurl <- "http://www.espn.com/nfl/team/roster/_/name/bal/baltimore-ravens"
+doc <- htmlTreeParse(fileurl, useInternal = T)
+xpathSApply(doc, "//li[@class= 'sub']", xmlValue)
