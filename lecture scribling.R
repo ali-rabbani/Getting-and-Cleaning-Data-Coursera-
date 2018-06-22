@@ -39,4 +39,19 @@ rootnode[[3]][[1]]
 
 xmlSApply(rootnode, xmlValue)
 
-xpathSApply(rootnode, "//price", xmlValue)
+xpathSApply(rootnode, "//price", xmlValue) ##error, not excecuting
+
+fileurl <- "http://www.espn.go.com/nfl/team/_/name/bal/baltimore-ravens"
+
+doc <- htmlTreeParse(fileurl, useInternal = T)
+
+scores <- xpathSApply(doc,"//li[@class= 'score']", xmlValue) ##error, results different than lectures
+teams <- xpathSApply(doc,"//li[@class= 'team-name']", xmlValue) ##same
+teams
+scores
+xpathSApply(doc,"//li[@class= 'nextGame']", xmlValue) ##same
+
+
+fileurl <- "http://www.espn.com/nfl/team/roster/_/name/bal/baltimore-ravens"
+doc <- htmlTreeParse(fileurl, useInternal = T)
+xpathSApply(doc, "//li[@class= 'sub']", xmlValue)
