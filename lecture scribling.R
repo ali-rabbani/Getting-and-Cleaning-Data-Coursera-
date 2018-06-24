@@ -55,3 +55,34 @@ xpathSApply(doc,"//li[@class= 'nextGame']", xmlValue) ##same
 fileurl <- "http://www.espn.com/nfl/team/roster/_/name/bal/baltimore-ravens"
 doc <- htmlTreeParse(fileurl, useInternal = T)
 xpathSApply(doc, "//li[@class= 'sub']", xmlValue)
+
+install.packages('data.table')
+library(data.table)
+
+dt <- data.table("x" = rnorm(9), "y" = rep(c("a", "b", "c"), each = 3), "z" = rbinom(9, 5, 0.5))
+dt
+
+dt[c(2, 3)] ## gives expected result of 2nd and 3rd column as opposed to the lecture
+
+k = {print(10); 5}
+k
+
+listdt <- dt[ , list(mean(x), sum(z))]
+
+cdt <- dt[ , c(mean(x), sum(z))]
+
+class(listdt)
+class(cdt)
+
+df <- data.frame("x" = rnorm(9), "y" = rep(c("a", "b", "c"), each = 3), "z" = rbinom(9, 5, 0.5))
+
+class(df)
+
+df[ , list(mean(x), sum(z))]        #gets error
+df[ , list(mean("x"), sum("z"))]    #gets error
+
+dt[ , table(z)]
+
+dt[ , a:= z/x]
+dt #changed the value of dt without assigning the value
+df[ , a:= z/x] # gets error
