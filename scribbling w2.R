@@ -71,3 +71,37 @@ readA
 readdf
 h5write(c(11, 12, 13, 14), 'example.h5', 'foo/A', index = list(4:5, 1:2 ))
 h5read('example.h5', 'foo/A')
+
+
+
+## Reading from the web
+library(XML)
+con = url('https://scholar.google.com.pk/citations?user=ffQSH1MAAAAJ&hl=en')
+htmlcode <- readLines(con)
+close(con)
+
+#This did not work for me, don't know what happened
+url <- 'https://scholar.google.com.pk/citations?user=ffQSH1MAAAAJ&hl=en'
+htmlabuji <- htmlTreeParse(url, useInternal = T  )
+rootabuji <- xmlRoot(htmlabuji)  ##cant understand for now
+xpathSApply(htmlabuji, '//title' ,xmlValue) ## not giving the desired result
+xpathSApply(htmlabuji, "//td[@id='col-citedby']", xmlValue) ## again not the result
+
+
+#Now this is working
+htmlabuji <- htmlTreeParse(htmlcode, useInternalNodes = T)
+
+#for subsetting
+rootabuji <- xmlRoot(htmlabuji)
+rootabuji[[1]]
+names(rootabuji[[2]][[1]])
+
+#using xpath
+xpathSApply(htmlabuji, "//title", xmlValue)
+xpathSApply(rootabuji, "//title", xmlValue)
+xpathSApply(htmlabuji, "//a[@class = 'gsc_a_at']", xmlValue)  
+#same way as extracting from xml, useful if you know the source code values
+
+#using httr package
+install.packages('httr')
+library(httr)
