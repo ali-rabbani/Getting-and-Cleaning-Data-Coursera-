@@ -87,7 +87,7 @@ h5read('example.h5', 'foo/A')
 
 ## Reading from the web
 library(XML)
-con = url('https://scholar.google.com.pk/citations?user=ffQSH1MAAAAJ&hl=en')
+con <- url('https://scholar.google.com.pk/citations?user=ffQSH1MAAAAJ&hl=en')
 htmlcode <- readLines(con)
 close(con)
 
@@ -110,9 +110,81 @@ names(rootabuji[[2]][[1]])
 #using xpath
 xpathSApply(htmlabuji, "//title", xmlValue)
 xpathSApply(rootabuji, "//title", xmlValue)
-xpathSApply(htmlabuji, "//a[@class = 'gsc_a_at']", xmlValue)  
+xpathSApply(htmlabuji, "//a[@class = 'gsc_a_at']", xmlValue) 
+xpathSApply(htmlabuji, "//td[@id = 'col-citedby']", xmlValue)
 #same way as extracting from xml, useful if you know the source code values
 
 #using httr package
 install.packages('httr')
 library(httr)
+library(XML)
+url <- 'https://scholar.google.com.pk/citations?user=ffQSH1MAAAAJ&hl=en'
+html2 <- GET(url)
+htmltext <- content(html2, as = 'text')
+htmlparsed <- htmlParse(htmltext, asText = T)
+xpathSApply(htmlparsed, "//title", xmlValue)
+
+url <- 'https://httpbin.org/basic-auth/user/passwd'
+pg1 <- GET(url)
+pg1 
+#Respose, Status: 401
+
+pg2 <- GET(url, authenticate("user", "passwd"))
+pg2
+#Response, Status 200, Authenticated
+
+names(pg1) #giving the names, don't know why
+names(pg2) #but this is the way if needed
+?GET
+?handle
+
+google <- handle("http://google.com")
+pg1 <- GET(handle = google, path = "/")
+pg2 <- GET(handle = google, path = "search")
+
+##Reading from APIs 
+#uper se nikal gaya sab kuch
+library(httr)
+myapp <- oauth_app("twitter", 
+                   key = "H8Bv9Oe9SYcjNpPSKB5izNjrr",
+                   secret = "Yt8mMPyLXE82V9tnhyI0yiGpg4upGbUoK263iPrt03jZbFSqW6")
+
+sig <- sign_oauth1.0(app = myapp, 
+                      token = "1938221286-qqc2JpygrfxcKlN6YRntGmJdJoJ5MwBhL6WiK9J", 
+                     token_secret = "HpukWwIpT957EhuG4ugeQxURGcoZocqRdVMNITfbzWAbu")
+#this is the authentication I get from the app when extracting from the following link
+
+homeTL <- GET("https://api.twitter.com/1.1/statuses/home_timeline.json", sig)
+# ^ is the Json object extracted from the link
+
+json1 <- content(homeTL)   #json object now a structed R Object
+
+names(json1) #Null
+length(json1) 
+names(json1[[10]])
+json1[[10]][["text"]]
+
+# the following function is now using jsonlite package to make R structure to json
+# and then reading it back into R
+# the reason of doing so is that jsonlite makes relatively uncomplicated data frames
+# as compared to the structures obtained from 'content' function of 'httr' package
+# "::" signifies that the function will be used from the preceeding package, irrespective
+# of the order in which the packages were loaded into R
+
+json2 <- jsonlite::fromJSON(toJSON(json1))
+colnames(json2)
+  json2[1, 1:4]
+
+class(json2) #data.frame
+
+
+names(homeTL)
+names(homeTL$id)
+
+
+
+library(jsonlite)
+
+
+install.packages('foreign')
+  
