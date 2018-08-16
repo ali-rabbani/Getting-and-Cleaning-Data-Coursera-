@@ -24,8 +24,7 @@ sort(x$var2, na.last = F)
 order(x$var2) 
 order(x$var3) ##GIVES THE INDICES instead of actual values, after arranging
 x[order(x$var1), ]   #sort whole rows according to the col of var1
-x[sort(x$var1), ]   #just gets col of var1 in order, others remain same. 
-                    #actual rows disturbed. Can not be used to order table
+x[sort(x$var1), ]   
 
 identical(x[order(x$var1), ], 
           x[sort(x$var1), ]
@@ -162,8 +161,8 @@ table(restdata$zcf)
 
 library(plyr)
 ?mutate
-restdata3 <- mutate(restdata, zipgroups3 <- cut2(restdata, g=4))
-
+restdata3 <- mutate(restdata, zipgroups3 = cut2(restdata$zipCode, g=4))
+head(restdata3)
 
 ##RESHAPING DATA
 
@@ -377,3 +376,51 @@ dflist <- list(df1, df2, df3)
 ?join_all
 join_all(dflist)                #and that is the reason to use join
 arrange(join_all(dflist), id)
+
+##QUIZ
+
+#1
+house <- read.csv(file = "https://d396qusza40orc.cloudfront.net/getdata%2Fdata%2Fss06hid.csv")
+agricultureLogical <- ifelse(house$AGS == 6 & house$ACR == 3, TRUE, FALSE)
+head(which(agricultureLogical), 3)
+
+
+#2
+install.packages('jpeg')
+library(jpeg)
+?readJPEG
+download.file(url = "https://d396qusza40orc.cloudfront.net/getdata%2Fjeff.jpg", destfile = "test.jpg", method = "curl")
+jpeg <- readJPEG(source = "test.jpg", native = T)
+?quantile
+quantile(jpeg, probs = c(.3, .8))
+
+#3
+library(dplyr)
+edu <- read.csv("https://d396qusza40orc.cloudfront.net/getdata%2Fdata%2FEDSTATS_Country.csv")
+
+# gdp file was not clean, modification was done
+
+gdp <- read.csv("https://d396qusza40orc.cloudfront.net/getdata%2Fdata%2FGDP.csv", 
+                skip = 5, 
+                header = F, 
+                nrows = 190, 
+                stringsAsFactors = F) %>%
+  select(V1,V2, V4:V5) %>%
+  rename(countrycode = V1, ranking = V2, country = V4, milusd = V5)
+
+
+arrange(gdp, desc(ranking))[13, "country"]
+
+#4  
+?merge
+gdpedu <- merge(gdp, edu, by.x = "countrycode", by.y = "CountryCode")
+
+income  <- group_by(gdpedu, Income.Group)
+summarise(income, averank = mean(ranking))
+
+#5
+library(Hmisc)
+gdpedu$quantiles <- cut2(gdpedu$ranking, g=5)
+rankgroups <- group_by(gdpedu, quantiles)
+
+filter(rankgroups, Income.Group == "Lower middle income") %>% summarise(count = length(country))
