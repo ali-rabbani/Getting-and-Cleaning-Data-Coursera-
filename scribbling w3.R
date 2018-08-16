@@ -418,9 +418,14 @@ gdpedu <- merge(gdp, edu, by.x = "countrycode", by.y = "CountryCode")
 income  <- group_by(gdpedu, Income.Group)
 summarise(income, averank = mean(ranking))
 
+tapply(gdpedu$rank, gdpedu$Income.Group, mean, simplify = T)
+
 #5
 library(Hmisc)
 gdpedu$quantiles <- cut2(gdpedu$ranking, g=5)
-rankgroups <- group_by(gdpedu, quantiles)
 
+rankgroups <- group_by(gdpedu, quantiles)
 filter(rankgroups, Income.Group == "Lower middle income") %>% summarise(count = length(country))
+
+#simpler and more elegant method
+table(gdpedu$Income.Group, gdpedu$quantiles)
