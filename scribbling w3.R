@@ -422,7 +422,7 @@ tapply(gdpedu$rank, gdpedu$Income.Group, mean, simplify = T)
 
 #5
 library(Hmisc)
-gdpedu$quantiles <- cut2(gdpedu$ranking, g=5)
+gdpedu$quantiles <- cut(gdpedu$ranking, breaks=5)
 
 rankgroups <- group_by(gdpedu, quantiles)
 filter(rankgroups, Income.Group == "Lower middle income") %>% summarise(count = length(country))
