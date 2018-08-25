@@ -25,11 +25,11 @@ library(dplyr)
 library(reshape2)
 #Getting activity labels
 
-activity <- read.table("data/UCI HAR Dataset/activity_labels.txt", stringsAsFactors = F)
+activity <- read.table("UCI HAR Dataset/activity_labels.txt", stringsAsFactors = F)
 activity.names <- activity[, 2]
 
 #Getting feature names
-features <- read.table("data/UCI HAR Dataset/features.txt", stringsAsFactors = F)
+features <- read.table("UCI HAR Dataset/features.txt", stringsAsFactors = F)
 features.needed.i <- grep("mean|std", features[,2])
 features.needed.n <- grep("mean|std", features[,2], value = T) 
 features.needed.n <- gsub("-mean", "Mean", features.needed.n)
@@ -39,16 +39,16 @@ features.needed.n <- gsub("[()-]", "", features.needed.n)
 
 #Getting test data
 
-testsubject <- read.table("data/UCI HAR Dataset/test/subject_test.txt")
-testactivity <- read.table("data/UCI HAR Dataset/test/y_test.txt")
-testdata <- read.table("data/UCI HAR Dataset/test/X_test.txt")[, features.needed.i]
+testsubject <- read.table("UCI HAR Dataset/test/subject_test.txt")
+testactivity <- read.table("UCI HAR Dataset/test/y_test.txt")
+testdata <- read.table("UCI HAR Dataset/test/X_test.txt")[, features.needed.i]
 test <- cbind(testsubject, testactivity, testdata)
 
 #Getting train data
 
-trainsubject <- read.table("data/UCI HAR Dataset/train/subject_train.txt")
-trainactivity <- read.table("data/UCI HAR Dataset/train/y_train.txt")
-traindata <- read.table("data/UCI HAR Dataset/train/X_train.txt")[, features.needed.i]
+trainsubject <- read.table("UCI HAR Dataset/train/subject_train.txt")
+trainactivity <- read.table("UCI HAR Dataset/train/y_train.txt")
+traindata <- read.table("UCI HAR Dataset/train/X_train.txt")[, features.needed.i]
 train <- cbind(trainsubject, trainactivity, traindata)
 
 #merging both
