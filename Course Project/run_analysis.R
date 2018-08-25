@@ -10,17 +10,14 @@
 #  of each variable for each activity and each subject.
 
 #Downloading and Extracting Data
-if(!dir.exists("data")){
-  dir.create("data")
-}
 
-if(!file.exists("data/project_data.zip")){
+if(!file.exists("project_data.zip")){
   download.file("https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip", 
                 destfile = "project_data.zip", method = "curl")
 }
 
 #extracting data
-if(!dir.exists("data/UCI HAR Dataset")){
+if(!dir.exists("UCI HAR Dataset")){
   unzip("project_data.zip")}
 
 ##Loading Data into R
