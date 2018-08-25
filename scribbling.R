@@ -75,7 +75,7 @@ dt[,c(2, 3)] ## gives expected result of 2nd and 3rd column as opposed to the le
 k = {print(10); 5}
 k
 
-listdt <- dt[ , list(mean(x), sum(z))]
+listdt <- dt[ , list(mean = mean(x), sum = sum(z))]
 
 cdt <- dt[ , c(mean(x), sum(z))]
 listdt
